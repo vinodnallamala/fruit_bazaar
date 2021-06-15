@@ -1,17 +1,38 @@
 <template>
   <div class="eCommerce">
   <div>
-    <navbar v-on:fromNavbar='cartIconClick' v-on:openHome='dataFromNavForOpenHome' :cart="cart" :filterItems='filterItems'></navbar>
+    <navbar v-on:fromNavbar='cartIconClick' v-on:openHome='dataFromNavForOpenHome' :cart="cart"></navbar>
   </div>
+    
     <div id="items" v-if="homePageItems">
-        <li id="itemsList" v-for="(value, index) in items" :key="value.product">
+    
+        <li id="itemsList" v-for="(value, index) in filterItems" :key="value.product">
           <itemPreview  v-on:dataFromItemPreviePage='dataFromItemPreview' v-on:dataFromItemPreviewForOpeningCart='dataForOpenCart' :value='value' :index='index' :cart='cart' :counter='counter' :orderSummaryViewOfCartBuy='orderSummaryViewOfCartBuy' :cartDivView='cartDivView' :buyingList='buyingList'> </itemPreview>
         </li>
+        <div id='earchingInputDiv'>
+            <input v-model="searchInput" id="searchInputField" size="sm" class="mr-sm-2" placeholder="Search">
+        </div>
+    
     </div>  
     <div id="cartDiv" v-if="cartDivView">
       <cart v-on:totalInCart='totalFromCart' v-on:dataFromCart='recieveFromCart' v-on:dataFromBuyProductFromCartComponent='valueFromCartBuy' :counter='counter' :cartDivView='cartDivView' :cart='cart' />
     </div>
     <div id="buyingModal" v-if='buyingPageVisible'>
+        <!-- <b-button v-b-modal.modal-14>
+          buy summary
+        </b-button> -->
+        <b-modal no-close-on-backdrop id="OrderSummaryOfDirectBuy">
+         <div>
+            <img title='Close' @click="closeModalIconClickInBuyModal" class="float-right"  id="closeModalIcon" :src="require('@/assets/error.png')" alt="close">
+          </div>
+          <div class='p-0' id="orderSummary">
+            <buyProduct :buyingList='buyingList'></buyProduct>
+          </div>
+        </b-modal>
+        
+    </div> 
+    
+     <!-- <div id="buyingModal" v-if='buyingPageVisible'>
         <b-button v-b-modal="'modal-'+'OrderSummary'">
           buy summary
         </b-button>
@@ -24,13 +45,13 @@
           </div>
         </b-modal>
         
-    </div>
+    </div>  -->
     <br>
     <div id="orderSummary" v-if="orderSummaryViewOfCartBuy">
-      <b-button v-b-modal="'modal-'+'OrderSummaryOfCartBuy'">
+      <!-- <b-button v-b-modal="'modal-'+'OrderSummaryOfCartBuy'">
            summary
-        </b-button>
-        <b-modal no-close-on-backdrop id="modal-OrderSummaryOfCartBuy">
+        </b-button> -->
+        <b-modal no-close-on-backdrop id="cartOrderSummaryShowButton">
           <div>
             <img title='Close' @click="closeModalIconClickInCartBuyPage" class="float-right"  id="closeModalIcon" :src="require('@/assets/error.png')" alt="close">
           </div>
@@ -58,6 +79,7 @@ export default {
   },
   data(){
     return {
+            searchInput:'',
       orderSummaryViewOfCartBuy:false,
       backarrowView:false,
       cartDivView:false,
@@ -209,6 +231,7 @@ export default {
 
   
   methods: {
+    
     totalFromCart(totalOfCart){
       this.cartTotal=totalOfCart
     },
@@ -224,14 +247,6 @@ export default {
         this.homePageItems=valueFromItemPreviewForOpenCart.homePageItems
         this.cartDivView=valueFromItemPreviewForOpenCart.cartDivView  
     },
-    // backToHomePageFromOrderSummary(){
-    //   this.homePageItems=false
-    //   this.modalClose=false
-    //    this.backarrowView=true
-    //   this.buyingPageView=false
-    //   this.orderSummaryViewOfCartBuy = false
-    //   this.cartDivView=true
-    // }, 
    
     dataFromItemPreview(dataFromChild){
       this.buyIngListfromChild=dataFromChild.buyingList
@@ -255,17 +270,19 @@ export default {
       cartIconClick(valueFromNavbar){
         this.homePageItems=valueFromNavbar.homePageItems
         this.cartDivView=valueFromNavbar.cartDivView
-    }
+      }
    
     
    
   },
   computed: {
     filterItems(){
-      this.$forceUpdate()
-      return this.items.filter(item => item.product.toLowerCase().includes(this.searchInput))
-    }
+     return this.items.filter((items)=>{
+        return this.searchInput.toLowerCase().split(' ').every(v => items.product.toLowerCase().includes(v))
+      })
+    },
   },
+   
 }
 </script>
 
@@ -279,7 +296,25 @@ export default {
     color:black;
     
   }
+  #earchingInputDiv {
+    height: 50px;
+    position: absolute;
+    top:100px;
+    z-index: 200;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+  }
+  #searchInputField {
+      height: 40px;
+      width:50%;
+      padding:0px 15px;
+      border:1px solid darkgray;
+    }
   #items {
+    margin-top: 33px;
     display: grid;
     grid-template-columns: auto auto  auto auto auto;
     overflow: hidden;
@@ -290,6 +325,7 @@ export default {
   #items li:hover {
      transform: scale(1.1);
   }
+  
   @media (min-width: 992px){
   .navbar-expand-lg .navbar-collapse {
     display: flex !important;

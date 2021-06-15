@@ -42,7 +42,7 @@
                 <div id="cartButtonAndBuyButton">
                   <button v-if="goToCart" id="goToCartBtn" @click="GoToCartFromModal">Go To Cart</button>
                   <button v-if="addedToCart" id="addCartBtn" @click="addToCart( value)"> Add to cart </button>
-                  <button id="buyBtn" @click="buyItem(value)">Buy</button>
+                  <button id="buyBtn" @click="buyItem(value)" ref="btnShow">Buy</button>
                 </div>
             </b-modal>
         </div> 
@@ -58,7 +58,6 @@
             cart: Array,
             counter: Object,
             cartDivView: Boolean,
-            filterItems:Array,
             buyingList: Array,
             
 
@@ -86,6 +85,9 @@
           }
         },
         methods: {
+            // showModal(){
+            //   this.$refs.modal1.show()
+            // },
             homePageItemsClick(){
                 this.modalClose=true
 
@@ -111,7 +113,7 @@
                 });
                     this.counter[itemId] = 1
                     this.addedToCart = false
-                    return this.goToCart = true
+                    this.goToCart = true
                 }
             },  
             buyItem(value){
@@ -119,11 +121,15 @@
                 this.cartDivView=false
                 this.buyingList.push(value)
                 this.buyingPageView=true
-                this.$forceUpdate()
                 this.modalClose=false
                 this.$emit('dataFromItemPreviePage', this.emitingFromItemspreview)
+                setTimeout(() => {
+                  this.$root.$emit('bv::show::modal', 'OrderSummaryOfDirectBuy', '#btnShow')
+                },100)
             },
            
+            
+
         },
         
     }

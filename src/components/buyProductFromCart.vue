@@ -53,7 +53,7 @@
                 <div  id="cartPriceDetails">
                 <h5><b>Price Details</b></h5>
                 <hr>
-                    <p v-if='chargesNote' class="text-danger">*Shop ₹500 OR above and avide charges</p>
+                    <p v-if='chargesNote' class="text-danger">*Shop ₹500 or Above and avide charges</p>
 
                 <div class="row">
                   <div class="col-md-8">
@@ -133,56 +133,56 @@ export default {
         makePaymentInCart(){
         if(this.nameInCartBuy.length == 0){
           this.nameInCartBuyError="please provide name"
-        return
+          return
       
-      }
-      else{
-        this.nameInCartBuyError=''
-      }
-      if(this.villageInCartBuy.length == 0){
-        this.villageInCartBuyError="please provide village"
-        return
-        
-      }
-      else {
-        this.villageInCartBuyError=''
-      }
-      if(this.mandalInCartBuy.length == 0){
-        this.mandalInCartBuyError="please provide mandal"
-        return
-      }
-      else {
-        this.mandalInCartBuyError=''
-      }
-      if(this.districtInCartBuy.length == 0){
-        this.districtInCartBuyError="please provide district"
-        return
-      }
-      else {
-        this.districtInCartBuyError=''
-      }
-      if(this.stateInCartBuy.length == 0){
-        this.stateInCartBuyError='please provide state'
-        return
-      }
-      else {
-        this.stateInCartBuyError=''
-      }
-      if(this.mobileInCartBuy.length == 0){
-        this.mobileInCartBuyError='please provide mobile number'
-        return
-      }
-      else {
-        this.mobileInCartBuyError=''
-      }
-      if(this.pincodeInCartBuy.length == 0){
-        this.pincodeInCartBuyError='please provide pincode'
-        return
-      }
-      else {
-        this.pincodeInCartBuyError=''
-        alert("select Payment method in next page!")
-      }
+           }
+          else{
+            this.nameInCartBuyError=''
+          }
+        if(this.villageInCartBuy.length == 0){
+          this.villageInCartBuyError="please provide village"
+          return
+          
+        }
+        else {
+          this.villageInCartBuyError=''
+        }
+        if(this.mandalInCartBuy.length == 0){
+          this.mandalInCartBuyError="please provide mandal"
+          return
+        }
+        else {
+          this.mandalInCartBuyError=''
+        }
+        if(this.districtInCartBuy.length == 0){
+          this.districtInCartBuyError="please provide district"
+          return
+        }
+        else {
+          this.districtInCartBuyError=''
+        }
+        if(this.stateInCartBuy.length == 0){
+          this.stateInCartBuyError='please provide state'
+          return
+        }
+        else {
+          this.stateInCartBuyError=''
+        }
+        if(this.mobileInCartBuy.length == 0){
+          this.mobileInCartBuyError='please provide mobile number'
+          return
+        }
+        else {
+          this.mobileInCartBuyError=''
+        }
+        if(this.pincodeInCartBuy.length == 0){
+          this.pincodeInCartBuyError='please provide pincode'
+          return
+        }
+        else {
+          this.pincodeInCartBuyError=''
+          alert("select Payment method in next page!")
+        }
       
     },
     },

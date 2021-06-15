@@ -1,5 +1,6 @@
 <template>
     <div v-if="buyingList.length > 0">
+    
             <!-- <div id="backArrowInOrderSummaryInDirectBuy">
                 <img id='backarrow' @click="directBuyPageBackArrow" :src="require('@/assets/left-arrow.png')" alt="pic">
                 <span><b>Back</b></span>
@@ -58,7 +59,7 @@
                                 <div id="cartPriceDetailsInBuying">
                                 <h5><b>Price Details</b></h5>
                                 <hr>
-                                 <p v-if='chargesNote' class="text-danger">*Shop ₹500 OR above and avide charges</p>
+                                 <p v-if='chargesNote' class="text-danger">*Shop ₹500 or Above and avide charges</p>
                                 <h6 id="productTitle">Product: {{buyingList[0].product}}</h6>
                                 <div class="row">
                                 <div class="col-md-8">
@@ -85,7 +86,6 @@
                                         </button>
                                     </p>
                                     <p> ₹ {{buyingList[0].price * buyThingCount}}</p>
-                                    <!-- <p>₹ {{buyingList[0].price * buyThingCount}}</p> -->
                                     <p v-if='free' class="text-success">FREE</p>
                                     <p v-if='chargesApply'>₹ {{deliveryChargesApply}}</p>
                                     <hr>
@@ -238,11 +238,15 @@ export default {
                     this.free= true
                     this.chargesApply= false
                     this.deliveryChargesApply=0
+                    this.chargesNote=false
+
                 }
                 else{
                     this.free= false
                     this.chargesApply= true
                     this.deliveryChargesApply=40
+                    this.chargesNote=true
+
 
                 }
 
@@ -255,12 +259,15 @@ export default {
                 this.free=true
                 this.chargesApply=false
                 this.deliveryChargesApply=0
+                this.chargesNote=false
+
 
             }
             else{
                 this.free=false
                 this.chargesApply=true
                 this.deliveryChargesApply=40
+                this.chargesNote=true
 
 
             }

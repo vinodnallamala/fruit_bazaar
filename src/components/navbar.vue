@@ -18,12 +18,7 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-form>
-                    
-                    
-                    <b-form-input v-model="searchInput" size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-                    </b-nav-form>
-
+                   
                 
 
                     <b-nav-item-dropdown right>
@@ -55,11 +50,9 @@ export default {
     props: {
         searcInput: String,
         cart: Array,
-        filterItems: Array
     },
     data(){
         return{
-            searchInput:'',
             dataToHomePage:{
                 cartDivView:true,
                 homePageItems:false

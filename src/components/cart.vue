@@ -36,15 +36,15 @@
 
               </div>
               <div id="cartBottomSection" class="text-right p-3 bg-white" >
-                <span><b>Total Amount: ₹ {{totalAmountInCart}}</b></span>
-                <button @click="proceedToPayment" id="buynow">Proceed</button>
+                <span><b>Total Amount: ₹ {{totalAmountInCart + deliveryChargesApply}}</b></span>
+                <button @click="proceedToPayment" ref='cartOrderSummaryShow' id="buynow">Proceed</button>
               </div>
             </div>
             <div class='col-md-4'>
               <div  id="cartPriceDetails">
                 <h5><b>Price Details</b></h5>
                 <hr>
-                  <p v-if='chargesNote' class="text-danger">*Shop ₹500 OR above and avide charges</p>
+                  <p v-if='chargesNote' class="text-danger">*Shop ₹500 or Above and avide charges</p>
                 <div class="row">
                   <div class="col-md-8">
                     <p>Items </p>
@@ -91,6 +91,7 @@ export default {
         deliveryChargesApply:40,
         free:false,
         chargesApply:false,
+        counting:0,
         chargesNote:false,
         buyThingCount:1,
         cartDivAndItemsPages: {
@@ -107,7 +108,9 @@ export default {
   },
    beforeMount(){
       for(let index=0; index < this.cart.length; index++){
-          this.totalAmountInCart= this.totalAmountInCart + this.cart[index].price
+          console.log(this.counter)
+          this.totalAmountInCart = this.totalAmountInCart + this.cart[index].price * this.counter[this.cart[index].id]
+          console.log((this.cart[index]))
       }
       if(this.totalAmountInCart >= 500 ){
         this.free=true
@@ -126,46 +129,28 @@ export default {
     backToHomePage(){
       this.buyThingCount=1
       this.$emit('dataFromCart', this.cartDivAndItemsPages)
-      this.$forceUpdate()
+      return this.cart
 
     },
     dicrement(itemId, itemPrice, ind){
-     
-      if(this.counter[itemId] == 0 ){
-        const cons=confirm("Remove item from cart?")
-        this.cartDivView=false
-        this.orderSummaryViewOfCartBuy= true
-      if(cons){
-        this.cart.splice(ind,1)
-        this.$forceUpdate()
-        this.cartDivView=true
-        this.homePageItems=false
-        if(this.cart.length <1){
-          this.cartDivView=false
-          this.homePageItems=true
-          this.deliveryChargesApply = 0
-          
-        }
-      }
-        else{
-          this.cartDivView=true
-          this.homePageItems= false
-          this.deliveryChargesApply = 40
-           if(this.cart.length == 0){
-            this.deliveryChargesApply=0
+      if(this.counter[itemId] >= 1){
+        this.counter[itemId]--
+        this.totalAmountInCart=this.totalAmountInCart-itemPrice
+        if(this.counter[itemId] == 0 ){
+          const cons=confirm("Remove item from cart?")
+          if(cons){
+            this.cart.splice(ind,1)
           }
-          else {
-            this.deliveryChargesApply=40
-          }
+          else{
+            this.deliveryChargesApply = 40
+            this.counter[itemId]=1
+            this.totalAmountInCart=this.totalAmountInCart+itemPrice
 
         }
       
       }
-      if(this.counter[itemId] >= 1){
-          this.counter[itemId]--
-          this.totalAmountInCart=this.totalAmountInCart-itemPrice
-
       }
+          
       this.$emit('totalInCart', this.totalAmountInCart)
 
       if(this.totalAmountInCart >= 500){
@@ -181,6 +166,12 @@ export default {
         this.deliveryChargesApply=40
         this.chargesNote=true
 
+      }
+      if(this.cart.length === 0){
+            this.deliveryChargesApply=0
+      }
+      else {
+        this.deliveryChargesApply=40
       }
     },
     increment(itemId, itemPrice){
@@ -206,44 +197,53 @@ export default {
     },
     removeItemFromCart(ind,counting,itemPrice) {
         
-    if(this.cart.length>=1){
+    if(this.cart.length > 1){
       this.cart.splice(ind,1)
-      this.totalAmountInCart=this.totalAmountInCart-(counting*itemPrice)
+      this.totalAmountInCart=this.totalAmountInCart-(itemPrice * counting)
       this.$forceUpdate()
+      
+
     }
-    if(this.cart.length == 0){
+      else if(this.cart.length == 1){
         const conf = confirm("do you want to cleen cart")
-        if(conf){
-          this.cart.splice(ind,1)
+        console.log(conf, 'out')
 
-        }
-       
-        
-
+      if(conf){
+        this.cart.splice(ind,1)
+        this.totalAmountInCart=this.totalAmountInCart-(itemPrice * counting)
+        this.deliveryChargesApply = 0
+      }
     }
+
+    
+    
     if(this.totalAmountInCart >= 500){
         this.free= true
         this.chargesApply= false
-        this.deliveryChargesApply=0
+        this.deliveryChargesApply = 0
         this.chargesNote=false
 
       }
       else{
         this.free= false
         this.chargesApply= true
-        this.deliveryChargesApply=40
+        this.deliveryChargesApply = 40
         this.chargesNote=true
-          if(this.cart.length == 0){
-            this.deliveryChargesApply=0
-          }
-          else {
-            this.deliveryChargesApply=40
-          }
+         
       }
+       if(this.cart.length == 0){
+            this.deliveryChargesApply = 0
+          } 
+          else {
+            this.deliveryChargesApply = 40
+          }
       this.$emit('totalInCart', this.totalAmountInCart)
     },
     proceedToPayment(){
       this.$emit('dataFromBuyProductFromCartComponent', this.cartDivAndCartBuyPages)
+      setTimeout(() => {
+        this.$root.$emit('bv::show::modal','cartOrderSummaryShowButton' , '#cartOrderSummaryShow')
+      },100)
     },
   },
 }
